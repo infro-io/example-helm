@@ -1,0 +1,27 @@
+name: Comment diffs
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  comment-diffs:
+    name: comment diffs
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: infro-io/comment-diffs-action@v1.3
+        with:
+          repo: ${{ github.repository }}
+          revision: ${{ github.sha }}
+          pull-number: ${{ github.event.number }}
+          config: |
+            deployers:
+              - type: argocd
+                name: my-argo-cluster
+                endpoint: ${{ secrets.ARGOCD_ENDPOINT }}
+                authtoken: ${{ secrets.ARGOCD_TOKEN }}
+            vcs:
+              type: github
+              authtoken: ${{ secrets.GITHUB_TOKEN }}
